@@ -102,7 +102,8 @@ gulp.task('css-lint', function() {
 gulp.task('scripts', function() {
   return gulp.src([
     './js/plugins/jquery.min.js',
-    './js/plugins/Cookies.js',
+    //'./js/plugins/cookie.min.js',
+    //'./js/plugins/jquery.cookie.js',
     './js/plugins/slick.min.js',
     './js/main.js'
     ])

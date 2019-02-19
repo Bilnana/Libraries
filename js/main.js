@@ -1,3 +1,4 @@
+//ES6 SINTAX
 // jQuery(($) => {
 //   const jsLoaded = () => {
 //     console.log('js is loaded');
@@ -21,34 +22,58 @@
  
 // });
 
-  //ex.
-  // window.onbeforeunload = confirmExit;
-  //   function confirmExit()
-  //   {
-  //   return "Are you sure you want to leave this page?";
-  //   }
 
 
 $( document ).ready(function() {
   console.log('js is loaded');
-
   popupAction ();
-  // $(window).on('unload', popAction)
+  firstButtonClick ();
+  deleteCookies ();
 });
 
 function popupAction () {
-  var popM = $('.popup');
-  var cancelPop = $('.btn-cancel');
-  
-  //Button on click
+ 
+  //On mouseleave window action
   $(document).on('mouseleave', function () {
-    $(popM).addClass('open');
-    $('.overlay-pop').addClass('open');
+
+    var cookieExist = Cookies.get('checkLeaveing');
+    var popM = $('.popup');
+
+    if (!cookieExist) {
+      var date = new Date();
+      date.setTime(date.getTime() + (15 * 1000));
+
+      Cookies.set( 'checkLeaveing', 'user', {
+        expires: date,
+      });
+
+      //Add open class to open popup window
+      $('.popup').addClass('open');
+      $('.overlay-pop').addClass('open');
+
+      console.log('NE postoji');
+    } else {
+      console.log('postoji');
+      $('.popup').removeClass('open');
+      $('.overlay-pop').removeClass('open');
+    }
   }) 
 
   //Cancel button
-  $(cancelPop).on('click', function () {
-    $(popM).removeClass('open');
-    $('.overlay-pop').removeClass('open');;
+  $('.btn-cancel').on('click', function () {
+    $('.popup').removeClass('open');
+    $('.overlay-pop').removeClass('open');
+  })
+}
+
+function firstButtonClick () {
+  $('.c-btn--primary').on('click', function () {
+    console.log(Cookies.get());
+  })
+}
+
+function deleteCookies () {
+  $('.c-btn--secondary').on('click', function () {
+    Cookies.remove('checkLeaveing');
   })
 }
