@@ -77,3 +77,76 @@ function deleteCookies () {
     Cookies.remove('checkLeaveing');
   })
 }
+
+var termsAjaxConfirm = function() {
+
+  // Finding pages that does not need tersm and cond. modal and store them in vars.
+  var $body = $('body'),
+    errorPage = $body.find('.error-page'),
+    pathLoc = window.location.pathname,
+    artPapers = $('.page-company-contributions-articles-and-white-papers').length,
+    urlCheck = "/terms-and-conditions/check";
+
+  // Checking if user is currently on page that does not need modal and doing nothing
+  if (pathLoc == '/about/contact-savvy-investor' ||
+    pathLoc == "/about/terms-and-conditions" ||
+    pathLoc == "/about/terms-and-conditions/privacy-policy" ||
+    pathLoc == "/about/terms-and-conditions/refund-policy" ||
+    pathLoc == "/about/terms-and-conditions/cookie-policy" ||
+    pathLoc == "/about/terms-and-conditions/changes-to-policies" ||
+    errorPage.length) {} else {
+    // check if user is logged in
+    if ($body.hasClass('user-logged-in')) {
+      // else calling modal on every other page
+
+      $.ajax({
+        url: urlCheck,
+        type: "POST",
+        dataType: "json"
+      }).done(function(response) {
+        if (response == 0) {
+          var origin = document.location.origin;
+
+          $body.addClass('modal-open');
+
+          $('<div class="terms-and-conditions">').appendTo($body).load(origin + '/terms-and-conditions/confirm .savvy-terms-conditions-confirm').dialog({
+            modal: true,
+            title: 'Terms and conditions',
+            autoOpen: true,
+            dialogClass: 'buttons',
+            resizable: false,
+            draggable: false,
+            position: {
+              my: 'top',
+              at: 'top+200'
+            },
+            close: function(event, ui) {
+              $(this).remove();
+              $body.removeClass('modal-open');
+            }
+          });
+        }
+      });
+    }
+
+    if ($body.hasClass('not-logged-in')) {
+      //console.log('Ajax request');
+
+      $(document).on('mouseleave', function () {
+        $.ajax({
+          url: urlCheck,
+          type: "POST",
+          dataType: "json"
+        }).done(function(response) {
+
+          $body.addClass('modal-open');
+          alert('Ajax request');
+          // if (response == 0) {
+          //  // var origin = document.location.origin;
+          
+          // }
+        });
+      })
+    }
+  }
+}
